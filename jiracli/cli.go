@@ -107,6 +107,7 @@ type GlobalOptions struct {
 type CommonOptions struct {
 	Browse      figtree.BoolOption   `yaml:"browse,omitempty" json:"browse,omitempty"`
 	Editor      figtree.StringOption `yaml:"editor,omitempty" json:"editor,omitempty"`
+	File        figtree.StringOption `yaml:"file,omitempty" json:"file,omitempty"`
 	GJsonQuery  figtree.StringOption `yaml:"gjq,omitempty" json:"gjq,omitempty"`
 	SkipEditing figtree.BoolOption   `yaml:"noedit,omitempty" json:"noedit,omitempty"`
 	Template    figtree.StringOption `yaml:"template,omitempty" json:"template,omitempty"`
@@ -268,6 +269,10 @@ func BrowseUsage(cmd *kingpin.CmdClause, opts *CommonOptions) {
 
 func EditorUsage(cmd *kingpin.CmdClause, opts *CommonOptions) {
 	cmd.Flag("editor", "Editor to use").SetValue(&opts.Editor)
+}
+
+func FileUsage(cmd *kingpin.CmdClause, opts *CommonOptions) {
+	cmd.Flag("file", "File to use").SetValue(&opts.File)
 }
 
 func TemplateUsage(cmd *kingpin.CmdClause, opts *CommonOptions) {
@@ -463,6 +468,79 @@ func EditLoop(opts *CommonOptions, input interface{}, output interface{}, submit
 		}
 		break
 	}
+	return nil
+}
+
+var FileAbort = fmt.Errorf("file processing aborted")
+
+func ReadYmlInputFile(opts *CommonOptions, input interface{}, output interface{}, submit func() error) error {
+	tmpFile, err := tmpTemplate(opts.Template.Value, input)
+	if err != nil {
+		return err
+	}
+
+    tmpFile = opts.File.String()
+
+	// we need to copy the original output so that we can restore
+	// it on retries in case we try to populate bogus fields that
+	// are rejected by the jira service.
+	dup := reflect.New(reflect.ValueOf(output).Elem().Type())
+	err = copier.Copy(dup.Interface(), output)
+	if err != nil {
+		return err
+	}
+
+		// parse template
+		data, err := ioutil.ReadFile(tmpFile)
+		if err != nil {
+			return err
+		}
+
+		defer func(mapType, iface reflect.Type) {
+			yaml.DefaultMapType = mapType
+			yaml.IfaceType = iface
+		}(yaml.DefaultMapType, yaml.IfaceType)
+		yaml.DefaultMapType = reflect.TypeOf(map[string]interface{}{})
+		yaml.IfaceType = yaml.DefaultMapType.Elem()
+
+		// restore output incase of retry loop
+		err = copier.Copy(output, dup.Interface())
+		if err != nil {
+			return err
+		}
+
+		// HACK HACK HACK we want to trim out all the yaml garbage that is not
+		// poplulated, like empty arrays, string values with only a newline,
+		// etc.  We need to do this because jira will reject json documents
+		// with empty arrays, or empty strings typically.  So here we process
+		// the data to a raw interface{} then we fixup the yaml parsed
+		// interface, then we serialize to a new yaml document ... then is
+		// parsed as the original document to populate the output struct.  Phew.
+		var raw interface{}
+		if err := yaml.Unmarshal(data, &raw); err != nil {
+			log.Error(err.Error())
+            fmt.Printf("Invalid YAML syntax\n")
+			return FileAbort
+		}
+		yamlFixup(&raw)
+		fixedYAML, err := yaml.Marshal(&raw)
+		if err != nil {
+			log.Error(err.Error())
+            fmt.Printf("Invalid YAML syntax\n")
+			return FileAbort
+		}
+
+		if err := yaml.Unmarshal(fixedYAML, output); err != nil {
+			log.Error(err.Error())
+            fmt.Printf("Invalid YAML syntax\n")
+			return FileAbort
+		}
+		// submit template
+		if err := submit(); err != nil {
+			log.Error(err.Error())
+            fmt.Printf("Jira reported an error\n")
+			return FileAbort
+		}
 	return nil
 }
 

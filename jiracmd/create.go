@@ -46,6 +46,7 @@ func CmdCreateRegistry() *jiracli.CommandRegistryEntry {
 func CmdCreateUsage(cmd *kingpin.CmdClause, opts *CreateOptions) error {
 	jiracli.BrowseUsage(cmd, &opts.CommonOptions)
 	jiracli.EditorUsage(cmd, &opts.CommonOptions)
+	jiracli.FileUsage(cmd, &opts.CommonOptions)
 	jiracli.TemplateUsage(cmd, &opts.CommonOptions)
 	cmd.Flag("noedit", "Disable opening the editor").SetValue(&opts.SkipEditing)
 	cmd.Flag("project", "project to create issue in").Short('p').StringVar(&opts.Project)
@@ -85,10 +86,19 @@ func CmdCreate(o *oreo.Client, globals *jiracli.GlobalOptions, opts *CreateOptio
 	input.Overrides["user"] = globals.User.Value
 
 	var issueResp *jiradata.IssueCreateResponse
-	err = jiracli.EditLoop(&opts.CommonOptions, &input, &issueUpdate, func() error {
-		issueResp, err = jira.CreateIssue(o, globals.Endpoint.Value, &issueUpdate)
-		return err
-	})
+    var fnameOptsFile string
+    fnameOptsFile = opts.File.String()
+    if fnameOptsFile != "" {
+        err = jiracli.ReadYmlInputFile(&opts.CommonOptions, &input, &issueUpdate, func() error {
+            issueResp, err = jira.CreateIssue(o, globals.Endpoint.Value, &issueUpdate)
+            return err
+        })
+    } else {
+        err = jiracli.EditLoop(&opts.CommonOptions, &input, &issueUpdate, func() error {
+            issueResp, err = jira.CreateIssue(o, globals.Endpoint.Value, &issueUpdate)
+            return err
+        })
+    }
 	if err != nil {
 		return err
 	}
