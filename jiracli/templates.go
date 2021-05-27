@@ -115,8 +115,20 @@ func TemplateProcessor() *template.Template {
 		"pctOf": func(size, percent int) int {
 			return int(float32(size) * (float32(percent) / 100))
 		},
+		"pctVal": func(value, size int) int {
+			return (size - value) * 100 / size
+		},
 		"sub": func(a, b int) int {
 			return a - b
+		},
+		"add": func(a, b int) int {
+			return a + b
+		},
+		"mult": func(a, b int) int {
+			return a * b
+		},
+		"div": func(a, b int) int {
+			return a / b
 		},
 		"append": func(more string, content interface{}) (string, error) {
 			switch value := content.(type) {
