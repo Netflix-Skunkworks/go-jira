@@ -57,8 +57,6 @@ func CmdIssueLinkUsage(cmd *kingpin.CmdClause, opts *IssueLinkOptions) error {
 	return nil
 }
 
-// CmdIssueLink will update the given issue as being a duplicate by the given dup issue
-// and will attempt to resolve the dup issue
 func CmdIssueLink(o *oreo.Client, globals *jiracli.GlobalOptions, opts *IssueLinkOptions) error {
 	if err := jira.LinkIssues(o, globals.Endpoint.Value, &opts.LinkIssueRequest); err != nil {
 		return err

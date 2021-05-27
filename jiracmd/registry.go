@@ -30,6 +30,7 @@ func RegisterAllCommands() {
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "fields", Entry: CmdFieldsRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "in-progress", Entry: CmdTransitionRegistry("Progress"), Aliases: []string{"prog", "progress"}})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "issuelink", Entry: CmdIssueLinkRegistry()})
+	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "remotelink", Entry: CmdRemoteLinkRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "issuelinktypes", Entry: CmdIssueLinkTypesRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "issuetypes", Entry: CmdIssueTypesRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "labels add", Entry: CmdLabelsAddRegistry()})

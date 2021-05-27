@@ -338,6 +338,40 @@ func LinkIssues(ua HttpClient, endpoint string, lip LinkIssueProvider) error {
 	return responseError(resp)
 }
 
+// https://developer.atlassian.com/cloud/jira/platform/rest/v2/api-group-issue-remote-links/#api-rest-api-2-issue-issueidorkey-remotelink-post
+func (j *Jira) LinkRemoteIssue(issue string, url string, title string) error {
+	return LinkRemoteIssue(j.UA, j.Endpoint, issue, url, title)
+}
+
+func LinkRemoteIssue(ua HttpClient, endpoint string, issue string, url string, title string) error {
+        req := struct {
+            Object struct {
+                Url   string `json:"url"`
+                Title string `json:"title"`
+            } `json:"object"`
+        }{}
+        req.Object.Url = url
+        req.Object.Title = title
+
+	encoded, err := json.Marshal(req)
+	if err != nil {
+		return err
+	}
+
+	uri := URLJoin(endpoint, "rest/api/2/issue", issue, "remotelink")
+	resp, err := ua.Post(uri, "application/json", bytes.NewBuffer(encoded))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == 201 {
+		return nil
+	}
+	return responseError(resp)
+}
+
+
 // https://docs.atlassian.com/jira/REST/cloud/#api/2/issue-getTransitions
 func (j *Jira) GetIssueTransitions(issue string) (*jiradata.TransitionsMeta, error) {
 	return GetIssueTransitions(j.UA, j.Endpoint, issue)
