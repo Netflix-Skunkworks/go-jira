@@ -278,6 +278,10 @@ func RunTemplate(templateName string, data interface{}, out io.Writer) error {
 			cells[len(cells)-1] = append(cells[len(cells)-1], fmt.Sprintf("%v", value))
 			return "", nil
 		},
+		"rowLine": func() string {
+			table.SetRowLine(true)
+			return ""
+		},
 	}).Parse(templateContent)
 	if err != nil {
 		return err
