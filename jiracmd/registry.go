@@ -16,6 +16,7 @@ func RegisterAllCommands() {
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "comment", Entry: CmdCommentRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "component add", Entry: CmdComponentAddRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "components", Entry: CmdComponentsRegistry()})
+	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "versions", Entry: CmdVersionsRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "create", Entry: CmdCreateRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "createmeta", Entry: CmdCreateMetaRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "done", Entry: CmdTransitionRegistry("Done")})

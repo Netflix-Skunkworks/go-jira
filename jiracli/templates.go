@@ -300,6 +300,7 @@ var AllTemplates = map[string]string{
 	"comment":        defaultCommentTemplate,
 	"component-add":  defaultComponentAddTemplate,
 	"components":     defaultComponentsTemplate,
+	"versions":       defaultVersionsTemplate,
 	"create":         defaultCreateTemplate,
 	"createmeta":     defaultDebugTemplate,
 	"debug":          defaultDebugTemplate,
@@ -329,7 +330,7 @@ const defaultListTemplate = "{{ range .issues }}{{ .key | append \":\" | printf 
 
 const defaultTableTemplate = `{{/* table template */ -}}
 {{- headers "Issue" "Summary" "Type" "Priority" "Status" "Age" "Reporter" "Assignee" -}}
-{{- range .issues -}} 
+{{- range .issues -}}
   {{- row -}}
   {{- cell .key -}}
   {{- cell .fields.summary -}}
@@ -457,6 +458,9 @@ const defaultTransitionsTemplate = `{{ range .transitions }}{{.id }}: {{.name}}
 {{end}}`
 
 const defaultComponentsTemplate = `{{ range . }}{{.id }}: {{.name}}
+{{end}}`
+
+const defaultVersionsTemplate = `{{ range . }}{{.id }}: {{.name}}
 {{end}}`
 
 const defaultComponentAddTemplate = `{{/* compoinent add template */ -}}
