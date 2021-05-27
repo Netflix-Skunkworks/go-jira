@@ -26,6 +26,8 @@ You can build and install the official repository with [Go](https://golang.org/d
 
 	go get github.com/go-jira/jira/cmd/jira
 
+Make sure you have `GO111MODULE=on` environment variable set, which is required for successfull build.
+
 This will checkout this repository into `$GOPATH/src/github.com/go-jira/jira/`, build, and install it.
 
 It should then be available in $GOPATH/bin/jira.
