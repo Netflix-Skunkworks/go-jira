@@ -24,7 +24,7 @@ func CmdRankRegistry() *jiracli.CommandRegistryEntry {
 	opts := RankOptions{}
 
 	return &jiracli.CommandRegistryEntry{
-		"Mark issues as blocker",
+		"Change ranking of issue",
 		func(fig *figtree.FigTree, cmd *kingpin.CmdClause) error {
 			jiracli.LoadConfigs(cmd, fig, &opts)
 			return CmdRankUsage(cmd, &opts)
