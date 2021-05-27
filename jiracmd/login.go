@@ -52,25 +52,20 @@ func CmdLogin(o *oreo.Client, globals *jiracli.GlobalOptions, opts *jiracli.Comm
 	}
 
 	ua := o.WithoutRedirect().WithRetries(0).WithoutCallbacks().WithPostCallback(authCallback)
-	for {
-		if session, err := jira.GetSession(o, globals.Endpoint.Value); err != nil {
-			// No active session so try to create a new one
-			_, err := jira.NewSession(ua, globals.Endpoint.Value, globals)
-			if err != nil {
-				// reset password on failed session
-				globals.SetPass("")
-				log.Errorf("%s", err)
-				continue
-			}
-			if !globals.Quiet.Value {
-				fmt.Println(ansi.Color("OK", "green"), "New session for", globals.User)
-			}
-			break
-		} else {
-			if !globals.Quiet.Value {
-				fmt.Println(ansi.Color("OK", "green"), "Found session for", session.Name)
-			}
-			break
+
+	if session, err := jira.GetSession(o, globals.Endpoint.Value); err != nil {
+		// No active session so try to create a new one
+		_, err := jira.NewSession(ua, globals.Endpoint.Value, globals)
+		if err != nil {
+			// reset password on failed session
+			globals.SetPass("")
+			log.Errorf("%s", err)
+		} else if !globals.Quiet.Value {
+			fmt.Println(ansi.Color("OK", "green"), "New session for", globals.User)
+		}
+	} else {
+		if !globals.Quiet.Value {
+			fmt.Println(ansi.Color("OK", "green"), "Found session for", session.Name)
 		}
 	}
 	return nil
