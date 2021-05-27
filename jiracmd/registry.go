@@ -39,6 +39,7 @@ func RegisterAllCommands() {
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "login", Entry: CmdLoginRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "logout", Entry: CmdLogoutRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "rank", Entry: CmdRankRegistry()})
+	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "releases", Entry: CmdReleasesRegistry()})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "reopen", Entry: CmdTransitionRegistry("reopen")})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "request", Entry: CmdRequestRegistry(), Aliases: []string{"req"}})
 	jiracli.RegisterCommand(jiracli.CommandRegistry{Command: "resolve", Entry: CmdTransitionRegistry("resolve")})

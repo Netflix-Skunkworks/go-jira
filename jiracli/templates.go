@@ -312,6 +312,7 @@ var AllTemplates = map[string]string{
 	"issuetypes":     defaultIssuetypesTemplate,
 	"json":           defaultDebugTemplate,
 	"list":           defaultListTemplate,
+	"releases":       defaultReleasesTemplate,
 	"request":        defaultDebugTemplate,
 	"subtask":        defaultSubtaskTemplate,
 	"table":          defaultTableTemplate,
@@ -457,6 +458,9 @@ const defaultTransitionsTemplate = `{{ range .transitions }}{{.id }}: {{.name}}
 {{end}}`
 
 const defaultComponentsTemplate = `{{ range . }}{{.id }}: {{.name}}
+{{end}}`
+
+const defaultReleasesTemplate = `{{ range . }}{{.id }}: {{.name}}
 {{end}}`
 
 const defaultComponentAddTemplate = `{{/* compoinent add template */ -}}

@@ -5,7 +5,7 @@ package jiradata
 // https://github.com/coryb/slipscheme
 //
 // Generated with command:
-// slipscheme -dir jiradata -pkg jiradata -overwrite schemas/Project.json
+// slipscheme -dir jiradata -pkg jiradata -overwrite schemas/PageofVersion.json
 /////////////////////////////////////////////////////////////////////////
 //                            DO NOT EDIT                              //
 /////////////////////////////////////////////////////////////////////////

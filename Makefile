@@ -97,5 +97,5 @@ prove: test-password-store
 	OSHT_VERBOSE=1 prove -v _t/*.t
 
 generate:
-	cd schemas && ./fetch-schemas.py
+	cd schemas && go run ./fetch-schemas.go
 	grep -h slipscheme jiradata/*.go | grep json | sort | uniq | awk -F\/\/ '{print $$2}' | while read cmd; do $$cmd; done
