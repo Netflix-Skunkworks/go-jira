@@ -45,7 +45,12 @@ func main() {
 		panic(jiracli.Exit{Code: 1})
 	}
 
-	o := oreo.New().WithCookieFile(filepath.Join(jiracli.Homedir(), configDir, "cookies.js")).WithLogger(&oreoLogger{log})
+	if err := os.MkdirAll(filepath.Join(jiracli.Cookiedir(), configDir), 0700); err != nil {
+		log.Errorf("%s", err)
+		panic(jiracli.Exit{Code: 1})
+	}
+
+	o := oreo.New().WithCookieFile(filepath.Join(jiracli.Cookiedir(), configDir, "cookies.js")).WithLogger(&oreoLogger{log})
 
 	jiracmd.RegisterAllCommands()
 

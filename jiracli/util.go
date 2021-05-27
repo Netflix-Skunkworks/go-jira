@@ -21,6 +21,14 @@ func Homedir() string {
 	return os.Getenv("HOME")
 }
 
+func Cookiedir() string {
+    value, exists := os.LookupEnv("XDG_RUNTIME_DIR")
+    if !exists {
+        value = Homedir()
+    }
+    return value
+}
+
 func findClosestParentPath(fileName string) (string, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
