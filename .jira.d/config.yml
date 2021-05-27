@@ -5,6 +5,7 @@ endpoint: https://go-jira.atlassian.net
 user: admin
 login: atlassian@corybennett.org
 
+# Named queries below can be run using 'jira list --named-query=QUERYNAME'
 queries:
   todo: |
     resolution = unresolved {{if .project}}AND project = '{{.project}}'{{end}} AND status = 'To Do'
