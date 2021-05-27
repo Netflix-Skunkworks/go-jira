@@ -256,6 +256,14 @@ closes **go-jira** will submit the completed form.  The order which **go-jira** 
 * **EDITOR** environment variable
 * vim
 
+To automate editing, use the `--noedit` to skip opening the editor, and pass `--override` fields as defined in `~/.jira.d/templates/edit`: 
+
+```
+jira edit GOJIRA-321 --noedit --override priority=P0
+```
+
+To edit fields not in the default template, [customize the template](https://github.com/go-jira/jira/issues/238#issuecomment-681666211).
+
 ### Templates
 
 **go-jira** has the ability to customize most output (and editor input) via templates.  There are default templates available for all operations,
