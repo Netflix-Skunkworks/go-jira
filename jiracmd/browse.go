@@ -21,6 +21,7 @@ func CmdBrowseRegistry() *jiracli.CommandRegistryEntry {
 		"Open issue in browser",
 		func(fig *figtree.FigTree, cmd *kingpin.CmdClause) error {
 			cmd.Arg("ISSUE", "Issue to browse to").Required().StringVar(&opts.Issue)
+			jiracli.LoadConfigs(cmd, fig, &opts)
 			return nil
 		},
 		func(o *oreo.Client, globals *jiracli.GlobalOptions) error {
